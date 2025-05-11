@@ -1,11 +1,9 @@
 function App() {
   return (
     <>
-        <div className='bg-blue-500'>
-          hello world...
-        </div>
+      <div className="bg-blue-500">Admin pannel started...</div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
