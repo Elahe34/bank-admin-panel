@@ -7,8 +7,8 @@ const Sidebar = () => {
       <div className="flex justify-between items-center">
         <span className="text-xs md:text-base">Admin</span>
         <img
-          className="w-10 h-10 md:w-16 md:h-16"
-          src="../../public/assets/Logo.png"
+          className="w-10 h-10 md:w-16 md:h-16 mr-1"
+          src="/assets/Logo.png"
           alt="Logo"
         />
       </div>
