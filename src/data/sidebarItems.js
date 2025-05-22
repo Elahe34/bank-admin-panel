@@ -1,48 +1,47 @@
-// src/data/sidebarItems.js
 import {
-  Home,
   Users,
-  Banknote,
+  UserCheck,
+  ShieldCheck,
   CreditCard,
   BarChart2,
   Settings,
   LogOut,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const sidebarItems = [
   {
-    label: "داشبورد",
-    icon: Home,
-    path: "/dashboard",
-  },
-  {
-    label: "مشتریان",
+    label: 'لیست کاربران',
     icon: Users,
-    path: "/customers",
+    path: '/dashboard',
   },
   {
-    label: "تراکنش‌ها",
-    icon: Banknote,
-    path: "/transactions",
+    label: 'لیست نقش ها',
+    icon: UserCheck,
+    path: '/customers',
   },
   {
-    label: "کارت‌ها",
+    label: 'مدیریت کلاینت',
     icon: CreditCard,
-    path: "/cards",
+    path: '/transactions',
   },
   {
-    label: "گزارش‌ها",
+    label: 'مدیریت سیاست های امنیتی',
+    icon: ShieldCheck,
+    path: '/cards',
+  },
+  {
+    label: 'گزارش‌ها',
     icon: BarChart2,
-    path: "/reports",
+    path: '/reports',
   },
   {
-    label: "تنظیمات",
+    label: 'تنظیمات',
     icon: Settings,
-    path: "/settings",
+    path: '/settings',
   },
   {
-    label: "خروج",
+    label: 'خروج',
     icon: LogOut,
-    path: "/logout",
+    path: '/logout',
   },
 ];

@@ -1,1 +1,23 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: "Shabnam";
+  src: url("/fonts/Shabnam-Light.woff2") format("woff2"),
+    url("/fonts/Shabnam-Light.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "Shabnam";
+}
+/* html.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+html {
+  background-color: #ffffff;
+  color: #000000;
+} */
