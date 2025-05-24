@@ -2,12 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { TableItems } from '../data/TableItems';
 import { EllipsisVertical } from 'lucide-react';
 import SearchBox from './SearchBox';
+import EditClaimModal from '../Modals/EditClaimModal';
 
 const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [tableData, setTableData] = useState(TableItems);
   const menuRef = useRef(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedClaim, setSelectedClaim] = useState(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -26,12 +30,12 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [openMenuIndex]);
+  
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = TableItems.slice(indexOfFirstItem, indexOfLastItem);
-
-  const totalPages = Math.ceil(TableItems.length / itemsPerPage);
+  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
   const handlePageChange = (direction) => {
     if (direction === 'prev' && currentPage > 1) {
@@ -45,9 +49,16 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
     setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
   };
+  const handleSaveEditedClaim = (updatedClaim) => {
+  setTableData(prevData =>
+    prevData.map(item => item.id === updatedClaim.id ? { ...item, ...updatedClaim } : item)
+  );
+  setIsEditModalOpen(false); // مودال رو ببند بعد ذخیره
+};
+
 
   return (
-    <div className={`w-[90%] mx-auto transition-all duration-300"`}>
+    <div className={`w-[90%] mx-auto transition-all duration-300`}>
       <div className="flex justify-between items-center">
         <div className="flex justify-between items-center mb-4 px-4">
           <label className="text-sm">
@@ -86,8 +97,7 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
         </thead>
         <tbody>
           {currentItems.map((item, index) => {
-            const { id, nationalId, username, firstName, lastName, status } =
-              item;
+            const { id, nationalId, username, firstName, lastName, status } = item;
             return (
               <tr
                 key={id}
@@ -98,11 +108,7 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
                 <td className="p-2 text-sm">{username}</td>
                 <td className="p-2 text-sm">{firstName}</td>
                 <td className="p-2 text-sm">{lastName}</td>
-                <td
-                  className={`p-2 text-sm ${
-                    status ? 'text-green-600' : 'text-gray-500'
-                  }`}
-                >
+                <td className={`p-2 text-sm ${status ? 'text-green-600' : 'text-gray-500'}`}>
                   {status ? 'فعال' : 'غیرفعال'}
                 </td>
                 <td
@@ -126,7 +132,14 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
                     </button>
                     {openMenuIndex === index && (
                       <div className="absolute left-0 top-full mt-2 bg-white shadow-lg rounded p-2 text-right z-50 w-32">
-                        <button className="block w-full text-sm text-gray-700 hover:text-green-600 px-2 py-1 transition">
+                        <button
+                          className="block w-full text-sm text-gray-700 hover:text-green-600 px-2 py-1 transition"
+                          onClick={() => {
+                            setSelectedClaim(item);
+                            setIsEditModalOpen(true);
+                            setOpenMenuIndex(null);
+                          }}
+                        >
                           ویرایش Claim
                         </button>
                         <button className="block w-full text-sm text-gray-700 hover:text-red-600 px-2 py-1 transition">
@@ -164,15 +177,20 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </button>
         ))}
         <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
           className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
         >
           بعدی
         </button>
       </div>
+
+      <EditClaimModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        claimData={selectedClaim}
+        onSave={handleSaveEditedClaim}
+      />
     </div>
   );
 };

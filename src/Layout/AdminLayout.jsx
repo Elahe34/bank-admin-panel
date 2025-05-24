@@ -7,7 +7,7 @@ const AdminLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex bg-[#eff4f7] dark:bg-black dark:text-blue-50 text-gray-900 min-h-screen">
+    <div className="flex bg-white dark:bg-black dark:text-blue-50 text-gray-900 min-h-screen">
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
           isSidebarOpen ? 'pr-60' : 'pr-0'
