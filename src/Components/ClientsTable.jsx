@@ -53,7 +53,7 @@ const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
   setTableData(prevData =>
     prevData.map(item => item.id === updatedClaim.id ? { ...item, ...updatedClaim } : item)
   );
-  setIsEditModalOpen(false); // مودال رو ببند بعد ذخیره
+  setIsEditModalOpen(false); 
 };
 
 
