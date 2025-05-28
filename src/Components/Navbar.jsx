@@ -2,7 +2,6 @@
 import React from 'react';
 import { Menu, BellRing, Mail, Cog, X, LogOut, User } from 'lucide-react';
 import Theme from './Theme';
-
 const Navbar = ({ isSidebarOpen, setIsSidebarOpen }) => {
   return (
     <div
