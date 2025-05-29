@@ -23,7 +23,7 @@ const AdminLayout = () => {
             isSidebarOpen={isSidebarOpen}
             setIsSidebarOpen={setIsSidebarOpen}
           />
-          <UserList/>
+          {/* <UserList/> */}
         </div>
       </div>
       <div

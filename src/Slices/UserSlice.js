@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import apiClient from '../ts/apiClient'; // این مسیر ممکنه بسته به ساختار پروژه‌ت متفاوت باشه
+import apiClient from '../ts/apiClient'; 
 
-// async thunk
+
 export const fetchUsers = createAsyncThunk(
   'user/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await apiClient.get('/clients'); // این endpoint باید تو APIت باشه
+      const response = await apiClient.get('/clients'); 
       return response.data;
     } catch (error) {
       console.error('API fetchUsers error:', error);
@@ -40,7 +40,6 @@ const userSlice = createSlice({
   },
 });
 
-// selector
 export const selectUsers = (state) => state.user.list;
 
 export default userSlice.reducer;

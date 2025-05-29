@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import apiClient from '../ts/apiClient';
 
-// اکشن async برای گرفتن claims
 export const fetchClaims = createAsyncThunk(
   'claims/fetchClaims',
   async (_, { rejectWithValue }) => {
@@ -14,7 +13,6 @@ export const fetchClaims = createAsyncThunk(
   }
 );
 
-// اکشن async برای آپدیت claim
 export const updateClaim = createAsyncThunk(
   'claims/updateClaim',
   async (updatedClaim, { rejectWithValue }) => {
@@ -35,11 +33,10 @@ const claimsSlice = createSlice({
     error: null,
   },
   reducers: {
-    // اگر خواستی اکشن‌های sync دیگه هم اضافه کنی
+
   },
   extraReducers: (builder) => {
     builder
-      // Fetch claims
       .addCase(fetchClaims.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -53,7 +50,6 @@ const claimsSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Update claim
       .addCase(updateClaim.pending, (state) => {
         state.loading = true;
         state.error = null;
