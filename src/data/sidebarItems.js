@@ -12,17 +12,17 @@ export const sidebarItems = [
   {
     label: 'لیست کاربران',
     icon: Users,
-    path: '/dashboard',
+    path: '/ClietsList',
   },
   {
     label: 'لیست نقش ها',
     icon: UserCheck,
-    path: '/customers',
+    path: '/RolesList',
   },
   {
     label: 'مدیریت کلاینت',
     icon: CreditCard,
-    path: '/transactions',
+    path: '/Clientsinformation',
   },
   {
     label: 'مدیریت سیاست های امنیتی',

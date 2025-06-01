@@ -1,5 +1,6 @@
-import React from 'react';
-import { sidebarItems } from '../data/sidebarItems';
+import React from "react";
+import { sidebarItems } from "../data/sidebarItems";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   return (
@@ -15,15 +16,17 @@ const Sidebar = () => {
 
       <ul className="mt-8 md:mt-12">
         {sidebarItems.map((item, index) => {
-          const { label } = item;
+          const { label, path } = item;
           const Icon = item.icon;
           return (
             <li
               key={index}
               className="flex items-center justify-around mt-7 px-2 w-full h-12 hover:text-amber-700 hover:scale-110 cursor-pointer transition-all duration-200"
             >
-              <Icon className="hidden md:inline w-5 h-5" />
-              <span className="text-sm md:text-md">{label}</span>
+              <Link to={path}>
+                <Icon className="hidden md:inline w-5 h-5" />
+                <span className="text-sm md:text-md">{label}</span>
+              </Link>
             </li>
           );
         })}

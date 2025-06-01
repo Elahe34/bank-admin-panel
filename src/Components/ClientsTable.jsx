@@ -1,196 +1,71 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { TableItems } from '../data/TableItems';
-import { EllipsisVertical } from 'lucide-react';
-import SearchBox from './SearchBox';
-import EditClaimModal from '../Modals/EditClaimModal';
+import React from "react";
+import { Link } from "react-router-dom";
+import clients from "../data/ClientsData";
 
-const ClientsTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
-  const [openMenuIndex, setOpenMenuIndex] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [tableData, setTableData] = useState(TableItems);
-  const menuRef = useRef(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedClaim, setSelectedClaim] = useState(null);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setOpenMenuIndex(null);
-      }
-    }
-
-    if (openMenuIndex !== null) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [openMenuIndex]);
-  
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(tableData.length / itemsPerPage);
-
-  const handlePageChange = (direction) => {
-    if (direction === 'prev' && currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-    } else if (direction === 'next' && currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    setItemsPerPage(Number(e.target.value));
-    setCurrentPage(1);
-  };
-  const handleSaveEditedClaim = (updatedClaim) => {
-  setTableData(prevData =>
-    prevData.map(item => item.id === updatedClaim.id ? { ...item, ...updatedClaim } : item)
-  );
-  setIsEditModalOpen(false); 
-};
-
-
+const ClientsTable = () => {
   return (
-    <div className={`w-[90%] mx-auto transition-all duration-300`}>
-      <div className="flex justify-between items-center">
-        <div className="flex justify-between items-center mb-4 px-4">
-          <label className="text-sm">
-            تعداد نمایش در هر صفحه:
-            <select
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-              className="ml-2 border border-gray-300 rounded p-1 text-sm"
-            >
-              <option value={5}>۵</option>
-              <option value={10}>۱۰</option>
-              <option value={15}>۱۵</option>
-              <option value={20}>۲۰</option>
-            </select>
-          </label>
-        </div>
-        <div className="mr-3">
-          <SearchBox />
-        </div>
-      </div>
-
-      <table
-        dir="rtl"
-        className="w-full border-collapse text-center rounded overflow-hidden shadow-xl backdrop-blur-md bg-white/50 mt-1"
-      >
-        <thead className="bg-indigo-200/35 text-gray-800 font-semibold">
-          <tr>
-            <th className="p-3">ردیف</th>
-            <th className="p-3">کدملی</th>
-            <th className="p-3">نام کاربری</th>
-            <th className="p-3">نام</th>
-            <th className="p-3">نام خانوادگی</th>
-            <th className="p-3">وضعیت</th>
-            <th className="p-3">عملیات</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item, index) => {
-            const { id, nationalId, username, firstName, lastName, status } = item;
-            return (
+    <div className="p-6 bg-white rounded-xl shadow-md max-w-full">
+      <h2 className="text-3xl font-semibold mb-6 text-right text-gray-800">
+        لیست کلاینت‌ها
+      </h2>
+      <div dir="rtl" className="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+        <table className="min-w-full text-sm text-right text-gray-800 border-collapse">
+          <thead >
+            <tr className="bg-gray-100 border-b border-gray-300">
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">#</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">نام کلاینت</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">Client ID</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">توضیحات</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">Redirect URI</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 select-none">وضعیت</th>
+              <th className="py-3 px-5 font-semibold text-gray-800 select-none">جزییات</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clients.map((client, index) => (
               <tr
-                key={id}
-                className="even:bg-white/30 odd:bg-indigo-100/20 hover:bg-indigo-200/30 transition dark:text-gray-950"
+                key={client.id}
+                className="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200 cursor-pointer"
               >
-                <td className="p-2 text-sm">{indexOfFirstItem + index + 1}</td>
-                <td className="p-2 text-sm">{nationalId}</td>
-                <td className="p-2 text-sm">{username}</td>
-                <td className="p-2 text-sm">{firstName}</td>
-                <td className="p-2 text-sm">{lastName}</td>
-                <td className={`p-2 text-sm ${status ? 'text-green-600' : 'text-gray-500'}`}>
-                  {status ? 'فعال' : 'غیرفعال'}
+                <td className="py-3 px-5 border-r border-gray-200">{index + 1}</td>
+                <td className="py-3 px-5 border-r border-gray-200 font-medium text-gray-800">{client.clientName}</td>
+                <td className="py-3 px-5 border-r border-gray-200 font-mono text-gray-800">{client.clientId}</td>
+                <td
+                  className="py-3 px-5 border-r border-gray-200 text-gray-800 truncate max-w-xs"
+                  title={client.description || "-"}
+                >
+                  {client.description || "-"}
                 </td>
                 <td
-                  ref={openMenuIndex === index ? menuRef : null}
-                  className="p-2 flex justify-center items-center"
+                  className="py-3 px-5 border-r border-gray-200 text-gray-800 truncate max-w-xs"
+                  title={client.redirectUris[0]}
                 >
-                  <button className="mx-2 hover:text-red-600 cursor-pointer transition text-sm">
-                    حذف
-                  </button>
-                  <button className="mx-2 hover:text-green-600 cursor-pointer transition text-sm">
-                    ویرایش
-                  </button>
-                  <div className="relative">
-                    <button
-                      onClick={() =>
-                        setOpenMenuIndex(openMenuIndex === index ? null : index)
-                      }
-                      className="cursor-pointer"
-                    >
-                      <EllipsisVertical />
-                    </button>
-                    {openMenuIndex === index && (
-                      <div className="absolute left-0 top-full mt-2 bg-white shadow-lg rounded p-2 text-right z-50 w-32">
-                        <button
-                          className="block w-full text-sm text-gray-700 hover:text-green-600 px-2 py-1 transition"
-                          onClick={() => {
-                            setSelectedClaim(item);
-                            setIsEditModalOpen(true);
-                            setOpenMenuIndex(null);
-                          }}
-                        >
-                          ویرایش Claim
-                        </button>
-                        <button className="block w-full text-sm text-gray-700 hover:text-red-600 px-2 py-1 transition">
-                          حذف Claim
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  {client.redirectUris[0]}
+                </td>
+                <td className="py-3 px-5 border-r border-gray-200">
+                  <span
+                    className={`inline-block px-3 py-1 rounded text-sm font-semibold ${
+                      client.enabled
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    } select-none`}
+                  >
+                    {client.enabled ? "فعال" : "غیرفعال"}
+                  </span>
+                </td>
+                <td className="py-3 px-5 text-center">
+                  <Link
+                    to={`/clients/${client.clientId}`}
+                    className="text-blue-600 hover:text-blue-900  transition-colors duration-150 font-semibold"
+                  >
+                    مشاهده جزییات
+                  </Link>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      <div className="flex justify-center mt-6 gap-2">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
-        >
-          قبلی
-        </button>
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === i + 1
-                ? 'bg-indigo-500 text-white'
-                : 'bg-indigo-100 hover:bg-indigo-200'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
-        >
-          بعدی
-        </button>
+            ))}
+          </tbody>
+        </table>
       </div>
-
-      <EditClaimModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        claimData={selectedClaim}
-        onSave={handleSaveEditedClaim}
-      />
     </div>
   );
 };
