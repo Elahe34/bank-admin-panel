@@ -1,4 +1,4 @@
-import mockClients from "../../data/ClientsData";
+import mockClients from "../data/ClientsData";
 
 const clients = [...mockClients];
 

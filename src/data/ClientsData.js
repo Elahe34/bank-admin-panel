@@ -9,12 +9,16 @@ const mockClients = [
     allowedGrantTypes: ["authorization_code", "refresh_token"],
     scopes: ["profile", "account_info"],
     clientSecret: [
-      { type: "SharedSecret", value: "secret_mobile_app_123", expiration: null },
+      {
+        type: "SharedSecret",
+        value: "secret_mobile_app_123",
+        expiration: null,
+      },
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Mobile User" },
-      { type: "role", value: "mobile_client" },
+      { id: "claim-1-1", type: "name", value: "Mobile User" },
+      { id: "claim-1-2", type: "role", value: "mobile_client" },
     ],
     corsOrigins: ["https://bank.ir", "https://mobile.bank.ir"],
     properties: {
@@ -32,12 +36,16 @@ const mockClients = [
     allowedGrantTypes: ["authorization_code"],
     scopes: ["profile", "transactions"],
     clientSecret: [
-      { type: "SharedSecret", value: "secret_web_portal_456", expiration: null },
+      {
+        type: "SharedSecret",
+        value: "secret_web_portal_456",
+        expiration: null,
+      },
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Web User" },
-      { type: "role", value: "web_client" },
+      { id: "claim-2-1", type: "name", value: "Web User" },
+      { id: "claim-2-2", type: "role", value: "web_client" },
     ],
     corsOrigins: ["https://bank.ir", "https://portal.bank.ir"],
     properties: {
@@ -59,8 +67,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "ATM System" },
-      { type: "role", value: "atm" },
+      { id: "claim-3-1", type: "name", value: "ATM System" },
+      { id: "claim-3-2", type: "role", value: "atm" },
     ],
     corsOrigins: ["https://atm.bank.ir"],
     properties: {
@@ -78,12 +86,16 @@ const mockClients = [
     allowedGrantTypes: ["client_credentials"],
     scopes: ["internal_api"],
     clientSecret: [
-      { type: "SharedSecret", value: "secret_internal_service_abc", expiration: null },
+      {
+        type: "SharedSecret",
+        value: "secret_internal_service_abc",
+        expiration: null,
+      },
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Internal Service" },
-      { type: "role", value: "internal" },
+      { id: "claim-4-1", type: "name", value: "Internal Service" },
+      { id: "claim-4-2", type: "role", value: "internal" },
     ],
     corsOrigins: ["https://internal.bank.ir"],
     properties: {
@@ -101,12 +113,16 @@ const mockClients = [
     allowedGrantTypes: ["authorization_code"],
     scopes: ["profile", "account_info", "transactions"],
     clientSecret: [
-      { type: "SharedSecret", value: "secret_partner_app_xyz", expiration: null },
+      {
+        type: "SharedSecret",
+        value: "secret_partner_app_xyz",
+        expiration: null,
+      },
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Partner App" },
-      { type: "role", value: "partner" },
+      { id: "claim-5-1", type: "name", value: "Partner App" },
+      { id: "claim-5-2", type: "role", value: "partner" },
     ],
     corsOrigins: ["https://partner.com"],
     properties: {
@@ -124,12 +140,16 @@ const mockClients = [
     allowedGrantTypes: ["client_credentials"],
     scopes: ["analytics"],
     clientSecret: [
-      { type: "SharedSecret", value: "secret_analytics_tool_789", expiration: null },
+      {
+        type: "SharedSecret",
+        value: "secret_analytics_tool_789",
+        expiration: null,
+      },
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Analytics Tool" },
-      { type: "role", value: "analytics" },
+      { id: "claim-6-1", type: "name", value: "Analytics Tool" },
+      { id: "claim-6-2", type: "role", value: "analytics" },
     ],
     corsOrigins: ["https://analytics.bank.ir"],
     properties: {
@@ -151,8 +171,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 7" },
-      { type: "role", value: "client" },
+      { id: "claim-7-1", type: "name", value: "Client 7" },
+      { id: "claim-7-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client7.bank.ir"],
     properties: {
@@ -174,8 +194,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 8" },
-      { type: "role", value: "client" },
+      { id: "claim-8-1", type: "name", value: "Client 8" },
+      { id: "claim-8-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client8.bank.ir"],
     properties: {
@@ -197,8 +217,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 9" },
-      { type: "role", value: "client" },
+      { id: "claim-9-1", type: "name", value: "Client 9" },
+      { id: "claim-9-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client9.bank.ir"],
     properties: {
@@ -220,8 +240,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 10" },
-      { type: "role", value: "client" },
+      { id: "claim-10-1", type: "name", value: "Client 10" },
+      { id: "claim-10-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client10.bank.ir"],
     properties: {
@@ -243,8 +263,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 11" },
-      { type: "role", value: "client" },
+      { id: "claim-11-1", type: "name", value: "Client 11" },
+      { id: "claim-11-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client11.bank.ir"],
     properties: {
@@ -266,8 +286,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 12" },
-      { type: "role", value: "client" },
+      { id: "claim-12-1", type: "name", value: "Client 12" },
+      { id: "claim-12-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client12.bank.ir"],
     properties: {
@@ -289,8 +309,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 13" },
-      { type: "role", value: "client" },
+      { id: "claim-13-1", type: "name", value: "Client 13" },
+      { id: "claim-13-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client13.bank.ir"],
     properties: {
@@ -312,8 +332,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 14" },
-      { type: "role", value: "client" },
+      { id: "claim-14-1", type: "name", value: "Client 14" },
+      { id: "claim-14-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client14.bank.ir"],
     properties: {
@@ -335,8 +355,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 15" },
-      { type: "role", value: "client" },
+      { id: "claim-15-1", type: "name", value: "Client 15" },
+      { id: "claim-15-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client15.bank.ir"],
     properties: {
@@ -358,8 +378,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 16" },
-      { type: "role", value: "client" },
+      { id: "claim-16-1", type: "name", value: "Client 16" },
+      { id: "claim-16-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client16.bank.ir"],
     properties: {
@@ -381,8 +401,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 17" },
-      { type: "role", value: "client" },
+      { id: "claim-17-1", type: "name", value: "Client 17" },
+      { id: "claim-17-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client17.bank.ir"],
     properties: {
@@ -404,8 +424,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 18" },
-      { type: "role", value: "client" },
+      { id: "claim-18-1", type: "name", value: "Client 18" },
+      { id: "claim-18-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client18.bank.ir"],
     properties: {
@@ -427,8 +447,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 19" },
-      { type: "role", value: "client" },
+      { id: "claim-19-1", type: "name", value: "Client 19" },
+      { id: "claim-19-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client19.bank.ir"],
     properties: {
@@ -450,8 +470,8 @@ const mockClients = [
     ],
     enabled: true,
     claims: [
-      { type: "name", value: "Client 20" },
-      { type: "role", value: "client" },
+      { id: "claim-20-1", type: "name", value: "Client 20" },
+      { id: "claim-20-2", type: "role", value: "client" },
     ],
     corsOrigins: ["https://client20.bank.ir"],
     properties: {
