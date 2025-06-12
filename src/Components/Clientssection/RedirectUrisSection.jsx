@@ -5,7 +5,7 @@ import {
   addNewUri,
   removeUri,
   editUri,
-} from "../../Slices/clients/redirectUrisSlice";
+} from "../../Slices/clients/redirecturisSlice";
 
 import SectionWrapper from "../SectionWrapper";
 import GenericTable from "../GenericTable";
