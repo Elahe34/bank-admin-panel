@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 
 const ClaimFormModal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [form, setForm] = useState({ type: "", value: "" });
@@ -25,7 +25,7 @@ const ClaimFormModal = ({ isOpen, onClose, onSubmit, initialData }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Claim">
-      <div className="flex flex-col gap-4 p-4">
+      <div dir="rtl" className="flex flex-col gap-4 p-4">
         <input
           name="type"
           value={form.type}

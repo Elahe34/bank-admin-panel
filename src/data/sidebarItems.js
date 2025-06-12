@@ -27,12 +27,17 @@ export const sidebarItems = [
   {
     label: 'مدیریت سیاست های امنیتی',
     icon: ShieldCheck,
-    path: '/cards',
+    path: '/security',
   },
   {
     label: 'گزارش‌ها',
     icon: BarChart2,
     path: '/reports',
+  },
+   {
+    label: 'پیام ها',
+    icon: BarChart2,
+    path: '/massages',
   },
   {
     label: 'تنظیمات',

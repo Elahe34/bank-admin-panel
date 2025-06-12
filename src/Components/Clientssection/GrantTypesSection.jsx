@@ -1,24 +1,121 @@
-import React from "react";
 
-const GrantTypesSection = ({ grantTypes }) => {
-  if (!grantTypes || grantTypes.length === 0) {
-    return (
-      <div className="mb-4">
-        <h3 className="font-semibold mb-2">Grant Types</h3>
-        <p className="text-sm text-gray-500">هیچ نوع دسترسی ثبت نشده است.</p>
-      </div>
-    );
-  }
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchGrantTypes,
+  addGrantType,
+  removeGrantType,
+  editGrantType,
+} from "../../Slices/clients/grantTypeSlice";
+
+import SectionWrapper from "../SectionWrapper";
+import GenericTable from "../GenericTable";
+import ConfirmDeleteModal from "../../Modals/ClientModals/ConfirmDeleteModal";
+import GrantTypeFormModal from "../../Modals/ClientModals/GrantTypeFormModal";
+
+const GrantTypesSection = ({ clientId }) => {
+  const dispatch = useDispatch();
+  const grantTypes = useSelector((state) => state.grantTypes.list);
+
+  const [search, setSearch] = useState("");
+  const [deleteId, setDeleteId] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [currentGrantType, setCurrentGrantType] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchGrantTypes(clientId));
+  }, [dispatch, clientId]);
+
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    dispatch(removeGrantType({ clientId, id: deleteId }));
+    setShowDeleteModal(false);
+  };
+
+  const handleAdd = () => {
+    setEditMode(false);
+    setCurrentGrantType(null);
+    setShowFormModal(true);
+  };
+
+  const handleEdit = (grantType) => {
+    setEditMode(true);
+    setCurrentGrantType(grantType);
+    setShowFormModal(true);
+  };
+
+  const handleFormSubmit = (grantTypeValue) => {
+    if (editMode) {
+      dispatch(
+        editGrantType({
+          clientId,
+          id: currentGrantType.id,
+          newValue: grantTypeValue.allowedGrantTypes[0], 
+        })
+      );
+    } else {
+      dispatch(
+        addGrantType({
+          clientId,
+          value: grantTypeValue.allowedGrantTypes[0], 
+        })
+      );
+    }
+    setShowFormModal(false);
+  };
+
+  const columns = [{ key: "uri", label: "Allowed Grant Type" }];
+
+  if (!grantTypes) return null;
+
+  const tableData = grantTypes
+    .filter((item) => item?.value?.includes(search))
+    .map((item) => ({ id: item.id.toString(), uri: item.value }));
 
   return (
-    <div className="mb-4">
-      <h3 className="font-semibold mb-2">Grant Types</h3>
-      <ul className="list-disc pr-5 text-sm text-gray-800">
-        {grantTypes.map((type, index) => (
-          <li key={index}>{type}</li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <SectionWrapper
+        title="Allowed Grant Types"
+        onAddClick={handleAdd}
+        searchTerm={search}
+        setSearchTerm={setSearch}
+      >
+        <GenericTable
+          columns={columns}
+          data={tableData}
+          onEdit={(row) =>
+            handleEdit({
+              id: row.id,
+              allowedGrantTypes: [row.uri], 
+            })
+          }
+          onDelete={handleDelete}
+          searchTerm={search}
+        />
+      </SectionWrapper>
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+        title="آیا مطمئن هستید که می‌خواهید حذف کنید؟"
+      />
+
+      <GrantTypeFormModal
+        isOpen={showFormModal}
+        onClose={() => setShowFormModal(false)}
+        onSubmit={handleFormSubmit}
+        initialData={currentGrantType}
+        isEdit={editMode}
+      />
+    </>
   );
 };
 

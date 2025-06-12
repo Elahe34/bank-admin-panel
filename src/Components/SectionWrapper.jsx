@@ -13,7 +13,7 @@ const SectionWrapper = ({
         <h2 className="text-xl font-semibold">{title}</h2>
         <button
           onClick={onAddClick}
-          className="bg-blue-600 text-white px-4 py-1 rounded cursor-pointer"
+          className="bg-blue-900 text-white px-4 py-1 rounded cursor-pointer"
         >
           افزودن
         </button>

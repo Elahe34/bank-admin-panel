@@ -9,8 +9,8 @@ import {
 
 import SectionWrapper from "../SectionWrapper";
 import GenericTable from "../GenericTable";
-import ConfirmDeleteModal from "../../Modals/ConfirmDeleteModal";
-import ClaimFormModal from "../../Modals/ClaimFormModal";
+import ConfirmDeleteModal from "../../Modals/ClientModals/ConfirmDeleteModal";
+import ClaimFormModal from "../../Modals/ClientModals/ClaimFormModal";
 
 const ClaimsSection = ({ clientId }) => {
   const dispatch = useDispatch();

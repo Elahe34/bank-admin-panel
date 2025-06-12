@@ -16,7 +16,7 @@
     "@sentry/react": "^9.17.0",
     "@sentry/tracing": "^7.120.3",
     "@tailwindcss/vite": "^4.1.7",
-    "framer-motion": "^12.11.3",
+    "framer-motion": "^12.16.0",
     "lucide-react": "^0.509.0",
     "my-vite-app": "file:",
     "react": "^19.1.0",

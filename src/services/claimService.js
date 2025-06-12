@@ -7,7 +7,7 @@ function getStoredClaims() {
   if (stored) {
     return JSON.parse(stored);
   } else {
-    // اگر localStorage خالی بود، داده mockClients رو بریز داخلش
+  
     const initialData = {};
     mockClients.forEach(client => {
       initialData[client.clientId] = client.claims || [];
