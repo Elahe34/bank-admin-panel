@@ -1,9 +1,15 @@
 import React from "react";
 
 const GenericTable = ({ columns, data, onEdit, onDelete, searchTerm }) => {
+  // فیلتر روی همه ستون‌ها
   const filteredData = data.filter((item) =>
-    columns.some((col) =>
-      item[col.key]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    Object.values(item).some(
+      (value) =>
+        value &&
+        value
+          .toString()
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
     )
   );
 
@@ -12,7 +18,10 @@ const GenericTable = ({ columns, data, onEdit, onDelete, searchTerm }) => {
       <table className="w-full border border-gray-300 rounded table-auto">
         <thead className="bg-gray-200">
           <tr>
-            <th className="p-3 text-center align-middle border border-gray-300" style={{ minWidth: "60px" }}>
+            <th
+              className="p-3 text-center align-middle border border-gray-300"
+              style={{ minWidth: "60px" }}
+            >
               ردیف
             </th>
             {columns.map((col) => (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { TableItems } from "../data/TableItems";
-import { Edit2, Edit2Icon, Edit3, EditIcon, EllipsisVertical, Trash2 } from "lucide-react";
+import { EditIcon, EllipsisVertical, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import SearchBox from "./SearchBox";
 import EditClaimModal from "../Modals/EditClaimModal";
 
@@ -15,6 +15,35 @@ const UsersTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const menuRef = useRef(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedClaim, setSelectedClaim] = useState(null);
+
+  // --- سورتینگ ---
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+
+    const sortedData = [...tableData].sort((a, b) => {
+      const valA = a[key]?.toString().toLowerCase() ?? "";
+      const valB = b[key]?.toString().toLowerCase() ?? "";
+      if (valA < valB) return direction === "asc" ? -1 : 1;
+      if (valA > valB) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+    setTableData(sortedData);
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return null;
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp className="inline w-4 h-4 ml-1" />
+    ) : (
+      <ChevronDown className="inline w-4 h-4 ml-1" />
+    );
+  };
 
   useEffect(() => {
     localStorage.setItem("claims", JSON.stringify(tableData));
@@ -65,102 +94,128 @@ const UsersTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
   };
 
   const handleDelete = (id) => {
-    const confirmed = window.confirm("آیا از حذف این مورد مطمین هستید؟");
+    const confirmed = window.confirm("آیا از حذف این مورد مطمئن هستید؟");
     if (!confirmed) return;
     const updateData = tableData.filter((item) => item.id !== id);
     setTableData(updateData);
   };
 
   return (
-    <div className={`w-[90%] mx-auto transition-all duration-300`}>
-      <div className="flex justify-between items-center">
-        <div className="flex justify-between items-center mb-4 px-4">
-          <label className="text-sm">
-            تعداد نمایش در هر صفحه:
-            <select
-              value={itemsPerPage}
-              onChange={handleItemsPerPageChange}
-              className="ml-2 border border-gray-300 rounded p-1 text-sm"
-            >
-              <option value={5}>۵</option>
-              <option value={10}>۱۰</option>
-              <option value={15}>۱۵</option>
-              <option value={20}>۲۰</option>
-            </select>
-          </label>
-        </div>
-        <div className="mr-3">
-          <SearchBox />
-        </div>
+    <div className="p-6 bg-white rounded-xl shadow-md max-w-full">
+      <h2 className="text-3xl font-semibold mb-6 text-right text-gray-800">
+        کاربران
+      </h2>
+
+      <div className="flex justify-between items-center mb-5 px-2">
+        <label className="text-sm">
+          تعداد نمایش در هر صفحه:
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            className="ml-2 border border-gray-300 rounded p-1 text-sm"
+          >
+            <option value={5}>۵</option>
+            <option value={10}>۱۰</option>
+            <option value={15}>۱۵</option>
+            <option value={20}>۲۰</option>
+          </select>
+        </label>
+        <SearchBox />
       </div>
-
-      <table
-        dir="rtl"
-        className="w-full border-collapse text-center rounded overflow-hidden shadow-xl backdrop-blur-md bg-white/50 mt-1"
-      >
-        <thead className="bg-indigo-200/35 text-gray-800 font-semibold">
-          <tr>
-            <th className="p-3">ردیف</th>
-            <th className="p-3">کدملی</th>
-            <th className="p-3">نام کاربری</th>
-            <th className="p-3">نام</th>
-            <th className="p-3">نام خانوادگی</th>
-            <th className="p-3">وضعیت</th>
-            <th className="p-3">عملیات</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item, index) => {
-            const { id, nationalId, username, firstName, lastName, status } =
-              item;
-            return (
-              <tr
-                key={id}
-                className="even:bg-white/30 odd:bg-indigo-100/20 hover:bg-indigo-200/30 transition dark:text-gray-950"
+      <div dir="rtl" className="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+        <table className="min-w-full text-sm text-right text-gray-800 border-collapse">
+          <thead>
+            <tr className="bg-gray-100 border-b border-gray-300">
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300">#</th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer"
+                onClick={() => handleSort("nationalId")}
               >
-                <td className="p-2 text-sm">{indexOfFirstItem + index + 1}</td>
-                <td className="p-2 text-sm">{nationalId}</td>
-                <td className="p-2 text-sm">{username}</td>
-                <td className="p-2 text-sm">{firstName}</td>
-                <td className="p-2 text-sm">{lastName}</td>
-                <td
-                  className={`p-2 text-sm ${
-                    status ? "text-green-600" : "text-gray-500"
-                  }`}
-                >
-                  {status ? "فعال" : "غیرفعال"}
-                </td>
-                <td
-                  ref={openMenuIndex === index ? menuRef : null}
-                  className="p-2 flex justify-center items-center"
-                >
-                  <button
-                    onClick={() => handleDelete(id)}
-                    className="mx-2 hover:text-red-600 cursor-pointer transition text-sm"
-                  >
-                    <Trash2 color="#EF4444" size={17} /> 
-                  </button>
-                  <button
-                    className="mx-2 hover:text-green-600 cursor-pointer transition text-sm"
-                    onClick={() => {
-                      setSelectedClaim(item);
-                      setIsEditModalOpen(true);
-                    }}
-                  >
-                    <EditIcon color="#3B82F6" size={17} />
-                  </button>
+                کد ملی {getSortIcon("nationalId")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer"
+                onClick={() => handleSort("username")}
+              >
+                نام کاربری {getSortIcon("username")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer"
+                onClick={() => handleSort("firstName")}
+              >
+                نام {getSortIcon("firstName")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer"
+                onClick={() => handleSort("lastName")}
+              >
+                نام خانوادگی {getSortIcon("lastName")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer"
+                onClick={() => handleSort("status")}
+              >
+                وضعیت {getSortIcon("status")}
+              </th>
+              <th className="py-3 px-5 font-semibold text-gray-800">عملیات</th>
+            </tr>
+          </thead>
 
-                  <div className="relative ">
+          <tbody>
+            {currentItems.map((item, index) => {
+              const { id, nationalId, username, firstName, lastName, status } = item;
+              return (
+                <tr
+                  key={id}
+                  className="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200"
+                >
+                  <td className="py-3 px-5 border-r border-gray-200">
+                    {indexOfFirstItem + index + 1}
+                  </td>
+                  <td className="py-3 px-5 border-r border-gray-200">{nationalId}</td>
+                  <td className="py-3 px-5 border-r border-gray-200">{username}</td>
+                  <td className="py-3 px-5 border-r border-gray-200">{firstName}</td>
+                  <td className="py-3 px-5 border-r border-gray-200">{lastName}</td>
+                  <td
+                    className={`py-3 px-5 border-r border-gray-200 ${
+                      status ? "text-green-600" : "text-gray-500"
+                    }`}
+                  >
+                    {status ? "فعال" : "غیرفعال"}
+                  </td>
+
+                  <td
+                    ref={openMenuIndex === index ? menuRef : null}
+                    className="py-3 px-5 border-r border-gray-200 text-center relative"
+                  >
+                    <button
+                      onClick={() => handleDelete(id)}
+                      className="text-white px-3 py-1 rounded text-sm bg-red-700 hover:bg-red-800 transition mx-1"
+                    >
+                      حذف
+                    </button>
+
+                    <button
+                      className="text-white px-3 py-1 rounded text-sm bg-yellow-500 hover:bg-yellow-600 transition mx-1"
+                      onClick={() => {
+                        setSelectedClaim(item);
+                        setIsEditModalOpen(true);
+                      }}
+                    >
+                      ویرایش
+                    </button>
+
                     <button
                       onClick={() =>
                         setOpenMenuIndex(openMenuIndex === index ? null : index)
                       }
-                      className="cursor-pointer"
+                      className="cursor-pointer text-gray-600 hover:text-gray-800"
                     >
                       <EllipsisVertical size={17} />
                     </button>
+
                     {openMenuIndex === index && (
-                      <div className="absolute left-0 top-full mt-2 bg-white shadow-lg rounded p-2 text-right z-50 w-32">
+                      <div className="absolute left-0 top-full mt-2 bg-white shadow-lg rounded p-2 text-right z-50 w-36 border border-gray-200">
                         <button
                           className="block w-full text-sm text-gray-700 hover:text-green-600 px-2 py-1 transition"
                           onClick={() => {
@@ -182,14 +237,15 @@ const UsersTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
                         </button>
                       </div>
                     )}
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
+      {/* صفحه‌بندی */}
       <div className="flex justify-center mt-6 gap-2">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -212,9 +268,7 @@ const UsersTable = ({ isSidebarOpen, setIsSidebarOpen }) => {
           </button>
         ))}
         <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
           className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
         >

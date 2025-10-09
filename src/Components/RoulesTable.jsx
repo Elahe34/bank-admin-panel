@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { EditIcon, EllipsisVertical, Trash2 } from "lucide-react";
+import { EditIcon, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import SearchBox from "./SearchBox";
-import EditRoleModal from "../Modals/EditRoleModal"; 
-import { initialRoles } from "../data/RolesTableItems"; 
+import EditRoleModal from "../Modals/EditRoleModal";
+import { initialRoles } from "../data/RolesTableItems";
 
 const RolesTable = () => {
   const [rolesData, setRolesData] = useState(() => {
@@ -16,6 +16,8 @@ const RolesTable = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -47,24 +49,62 @@ const RolesTable = () => {
   const currentItems = filteredRoles.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
 
+  // --- تابع سورتینگ ---
+  const handleSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+
+    const sortedRoles = [...rolesData].sort((a, b) => {
+      const extractNumber = (str) => {
+        const match = str?.toString().match(/\d+/);
+        return match ? parseInt(match[0], 10) : str?.toString().toLowerCase() ?? "";
+      };
+
+      const valA = extractNumber(a[key]);
+      const valB = extractNumber(b[key]);
+
+      if (valA < valB) return direction === "asc" ? -1 : 1;
+      if (valA > valB) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setRolesData(sortedRoles);
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key !== key) return null;
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp className="inline w-4 h-4 ml-1" />
+    ) : (
+      <ChevronDown className="inline w-4 h-4 ml-1" />
+    );
+  };
+
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("آیا از حذف این نقش مطمئن هستید؟");
     if (!confirmDelete) return;
-    const updated = rolesData.filter((role) => role.id !== id);
-    setRolesData(updated);
+    setRolesData(rolesData.filter((role) => role.id !== id));
   };
 
   const handleSaveEditedRole = (updatedRole) => {
-    const updated = rolesData.map((role) =>
-      role.id === updatedRole.id ? { ...role, ...updatedRole } : role
+    setRolesData(
+      rolesData.map((role) =>
+        role.id === updatedRole.id ? { ...role, ...updatedRole } : role
+      )
     );
-    setRolesData(updated);
     setIsEditModalOpen(false);
   };
 
   return (
-    <div className="w-[90%] mx-auto">
-      <div className="flex justify-between items-center mb-4 px-4">
+    <div className="p-6 bg-white rounded-xl shadow-md max-w-full">
+      <h2 className="text-3xl font-semibold mb-6 text-right text-gray-800">
+        نقش‌ها
+      </h2>
+
+      <div className="flex justify-between items-center mb-5 px-2">
         <label className="text-sm">
           تعداد نمایش در هر صفحه:
           <select
@@ -87,61 +127,93 @@ const RolesTable = () => {
         />
       </div>
 
-      <table
-        dir="rtl"
-        className="w-full border-collapse text-center rounded overflow-hidden shadow-xl backdrop-blur-md bg-white/50"
-      >
-        <thead className="bg-indigo-200/35 text-gray-800 font-semibold">
-          <tr>
-            <th className="p-3">ردیف</th>
-            <th className="p-3">نام نقش</th>
-            <th className="p-3">عنوان فارسی</th>
-            <th className="p-3">توضیحات</th>
-            <th className="p-3">وضعیت</th>
-            <th className="p-3">عملیات</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((role, index) => (
-            <tr
-              key={role.id}
-              className="even:bg-white/30 odd:bg-indigo-100/20 hover:bg-indigo-200/30 transition dark:text-gray-950"
-            >
-              <td className="p-2 text-sm">{indexOfFirstItem + index + 1}</td>
-              <td className="p-2 text-sm">{role.roleName}</td>
-              <td className="p-2 text-sm">{role.persianName}</td>
-              <td className="p-2 text-sm">{role.description}</td>
-              <td
-                className={`p-2 text-sm ${
-                  role.status === "فعال" ? "text-green-600" : "text-gray-500"
-                }`}
+      <div dir="rtl" className="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+        <table className="min-w-full text-sm text-right text-gray-800 border-collapse">
+          <thead>
+            <tr className="bg-gray-100 border-b border-gray-300">
+              <th className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer">
+                #
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer hover:bg-gray-300 transition"
+                onClick={() => handleSort("roleName")}
               >
-                {role.status}
-              </td>
-              <td
-                ref={openMenuIndex === index ? menuRef : null}
-                className="p-2 flex justify-center items-center"
+                نام نقش {getSortIcon("roleName")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer hover:bg-gray-300 transition"
+                onClick={() => handleSort("persianName")}
               >
-                  <button
-                  className="mx-2 text-sm hover:text-red-600 transition"
-                  onClick={() => handleDelete(role.id)}
-                >
-                  <Trash2 color="#EF4444" size={17} />
-                </button>
-                <button
-                  className="mx-2 text-sm hover:text-green-600 transition"
-                  onClick={() => {
-                    setSelectedRole(role);
-                    setIsEditModalOpen(true);
-                  }}
-                >
-                  <EditIcon color="#3B82F6" size={17} />
-                </button>
-              </td>
+                عنوان فارسی {getSortIcon("persianName")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer hover:bg-gray-300 transition"
+                onClick={() => handleSort("description")}
+              >
+                توضیحات {getSortIcon("description")}
+              </th>
+              <th
+                className="py-3 px-5 font-semibold text-gray-800 border-r border-gray-300 cursor-pointer hover:bg-gray-300 transition"
+                onClick={() => handleSort("status")}
+              >
+                وضعیت {getSortIcon("status")}
+              </th>
+              <th className="py-3 px-5 font-semibold text-gray-800">عملیات</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {currentItems.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="text-center py-6 text-gray-600">
+                  هیچ داده‌ای یافت نشد
+                </td>
+              </tr>
+            ) : (
+              currentItems.map((role, index) => (
+                <tr
+                  key={role.id}
+                  className="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200"
+                >
+                  <td className="py-3 px-5 border-r border-gray-200">
+                    {indexOfFirstItem + index + 1}
+                  </td>
+                  <td className="py-3 px-5 border-r border-gray-200">{role.roleName}</td>
+                  <td className="py-3 px-5 border-r border-gray-200">{role.persianName}</td>
+                  <td className="py-3 px-5 border-r border-gray-200">{role.description}</td>
+                  <td
+                    className={`py-3 px-5 border-r border-gray-200 ${
+                      role.status === "فعال" ? "text-green-600" : "text-gray-500"
+                    }`}
+                  >
+                    {role.status}
+                  </td>
+                  <td
+                    ref={openMenuIndex === index ? menuRef : null}
+                    className="py-3 px-5 border-r border-gray-200 text-center"
+                  >
+                    <button
+                      className="text-white px-3 py-1 rounded text-sm bg-yellow-500 hover:bg-yellow-600 transition mx-1"
+                      onClick={() => {
+                        setSelectedRole(role);
+                        setIsEditModalOpen(true);
+                      }}
+                    >
+                      ویرایش
+                    </button>
+                    <button
+                      className="text-white px-3 py-1 rounded text-sm bg-red-700 hover:bg-red-800 transition mx-1"
+                      onClick={() => handleDelete(role.id)}
+                    >
+                      حذف
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex justify-center mt-6 gap-2">
         <button
@@ -165,9 +237,7 @@ const RolesTable = () => {
           </button>
         ))}
         <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={currentPage === totalPages}
           className="px-3 py-1 bg-indigo-200 rounded hover:bg-indigo-300 disabled:opacity-50"
         >

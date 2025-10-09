@@ -27,8 +27,8 @@ function ClientDetails() {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-8 mr-8 text-right">
-        جزئیات کلاینت - شناسه: {clientId}
+      <h2 className="text-xl font-bold mb-8 mr-8 text-right ">
+        ID : {clientId}
       </h2>
 
       <nav className="mb-9 flex items-center justify-start gap-5 ">
