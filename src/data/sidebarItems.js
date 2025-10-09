@@ -25,7 +25,7 @@ export const sidebarItems = [
     path: '/Clientsinformation',
   },
   {
-    label: 'مدیریت سیاست های امنیتی',
+    label: 'سیاست های امنیتی',
     icon: ShieldCheck,
     path: '/security',
   },

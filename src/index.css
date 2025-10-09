@@ -4,14 +4,14 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
-  font-family: "Shabnam";
-  src: url("/fonts/Shabnam-Light.woff2") format("woff2"),
-    url("/fonts/Shabnam-Light.woff") format("woff");
+  font-family: "Iransans";
+  src: url("/fonts/IRANSansWeb(FaNum).woff") format("woff"),
+    url("/fonts/IRANSansWeb(FaNum).woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 body {
-  font-family: "Shabnam";
+  font-family: "Iransans";
 }
 

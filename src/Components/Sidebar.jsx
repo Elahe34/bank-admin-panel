@@ -2,30 +2,56 @@ import React from "react";
 import { sidebarItems } from "../data/sidebarItems";
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = ({ isSidebarOpen }) => {
   return (
-    <div className="w-60 h-screen bg-[#223369] dark:bg-[#181B23] text-blue-50 p-2 md:p-4 shadow-md dark:shadow-xl dark:drop-shadow-[0_4px_3px_rgba(255,255,255,0.5)] transition-all ease-in-out duration-300">
-      <div className="flex justify-between items-center">
-        <span className="text-xs md:text-base">Admin</span>
+    <div
+      className={`h-full bg-[#223369] dark:bg-[#181B23] text-blue-50 transition-all duration-300 flex flex-col items-center ${
+        isSidebarOpen ? "w-60 px-4 py-4" : "w-20 px-2 py-4"
+      }`}
+    >
+      {/* بالای سایدبار */}
+      <div
+        className={`flex items-center justify-between w-full border-b border-blue-800 pb-3 mb-4 transition-all duration-300 ${
+          isSidebarOpen ? "px-0" : "flex-col"
+        }`}
+      >
+        <span
+          className={`text-sm md:text-lg font-semibold transition-all duration-300 ${
+            isSidebarOpen ? "block" : "hidden"
+          }`}
+        >
+          ادمین
+        </span>
         <img
-          className="w-10 h-10 md:w-16 md:h-16 mr-1"
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full"
           src="/assets/Logo.png"
           alt="Logo"
         />
       </div>
 
-      <ul className="mt-8 md:mt-12">
+      {/* آیتم‌ها */}
+      <ul className="mt-2 space-y-3 w-full">
         {sidebarItems.map((item, index) => {
-          const { label, path } = item;
-          const Icon = item.icon;
+          const { label, path, icon: Icon } = item;
           return (
-            <li
-              key={index}
-              className="flex items-center justify-around mt-7 px-2 w-full h-12 hover:text-amber-700 hover:scale-110 cursor-pointer transition-all duration-200"
-            >
-              <Link to={path}>
-                <Icon className="hidden md:inline w-5 h-5" />
-                <span className="text-sm md:text-md">{label}</span>
+            <li key={index}>
+              <Link
+                to={path}
+                className={`flex items-center rounded-lg hover:bg-blue-600 hover:text-white transition-all duration-200 ${
+                  isSidebarOpen
+                    ? "justify-start gap-3 px-3 py-3 flex-row-reverse"
+                    : "justify-center py-3"
+                }`}
+              >
+                <Icon className="w-5 h-5 min-w-[20px]" />
+                {isSidebarOpen && (
+                  <span
+                    className="text-sm md:text-base block text-right truncate"
+                    title={label}
+                  >
+                    {label}
+                  </span>
+                )}
               </Link>
             </li>
           );
