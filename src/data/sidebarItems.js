@@ -1,14 +1,21 @@
 import {
   Users,
+  LayoutDashboard,
   UserCheck,
   ShieldCheck,
   CreditCard,
   BarChart2,
   Settings,
   LogOut,
+ MessageSquareMore,
 } from 'lucide-react';
 
 export const sidebarItems = [
+    {
+    label: 'داشبورد',
+    icon: LayoutDashboard,
+    path: '/ClietsList',
+  },
   {
     label: 'لیست کاربران',
     icon: Users,
@@ -36,7 +43,7 @@ export const sidebarItems = [
   },
    {
     label: 'پیام ها',
-    icon: BarChart2,
+    icon: MessageSquareMore,
     path: '/massages',
   },
   {
